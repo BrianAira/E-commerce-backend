@@ -1,0 +1,38 @@
+####PRODUCTOS#######-------------------------------------------------
+###LISTAR PRODUCTOS
+GET http://127.0.0.1:8000/products
+
+###CREAR PRODUCTO
+
+POST http://127.0.0.1:8000/products
+Content-Type: application/json
+
+{
+  "name": "Producto 1",
+  "description": "Optional",
+  "entry_price": 10.1,
+  "sale_price":10.1,
+  "is_active": true,
+  "category":"a555",
+  "stock": 2
+}
+
+### TRAER PRODUCTO POR ID
+GET http://127.0.0.1:8000/products/2
+
+### ACTUALIZAR PRODUCTO POR ID
+PUT http://127.0.0.1:8000/products/1
+Content-Type: application/json
+
+{
+  "name": "Producto 2"
+}
+
+###ACTUALIZAR STOCK DE PRODUCTO
+PATCH  http://127.0.0.1:8000/products/1/stock
+Content-Type: application/json
+
+{
+  "delta": 8
+}
+

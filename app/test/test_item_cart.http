@@ -1,0 +1,14 @@
+POST http://127.0.0.1:8000/cart-items/1/items 
+Content-Type: application/json
+
+{
+  "quantity":1,
+  "cart_id":1,
+  "product_id":1
+}
+
+### traer por id de carrito
+
+GET  http://127.0.0.1:8000/cart-items/cart/1 
+
+

@@ -46,3 +46,15 @@ class CartRepository(ICartRepository):
 
     def list_all(self) -> List[Cart]:
         return list(self.session.exec(select(Cart)))
+
+    # def add_item(self,cart:Cart, product_id:int, quantity:int)->Cart:
+    #     return cart
+        
+    # def remove_item(self, cart:Cart, product_id:int, quantity:int)->Cart:
+    #     return cart
+    
+    # def update_item_quantity(self, cart:Cart, product_id:int, quantity:int)->Cart:
+    #     return cart
+    
+    def clear_cart(self, cart:Cart)->Cart:
+        return cart

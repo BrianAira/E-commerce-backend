@@ -1,0 +1,30 @@
+###ORDER ITEM ----------------------------------
+###Crear item
+POST http://127.0.0.1:8000/order_items/
+Content-Type: application/json
+
+{
+  "order_id": 1,
+  "product_id": 1,
+  "quantity": 1,
+  "subtotal": 20
+}
+
+###  Actualizar item 
+
+PATCH  http://127.0.0.1:8000/order_items/1
+Content-Type: application/json
+
+{
+  "quantity":8
+}
+###TRAER POR ID DE ORDEN
+
+GET  http://127.0.0.1:8000/order_items/order/1 
+
+###Eliminar item de la orden
+
+DELETE  http://127.0.0.1:8000/order_items/3
+
+###Listar items por orden
+GET  http://127.0.0.1:8000/order_items/order/1

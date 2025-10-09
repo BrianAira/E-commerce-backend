@@ -1,0 +1,39 @@
+### Crear carrito para usuario
+POST http://127.0.0.1:8000/carts
+Content-Type: application/json
+
+{
+  "user_id": 1
+}
+
+###
+
+### Obtener carrito por ID
+GET http://127.0.0.1:8000/carts/1
+
+###
+
+### Obtener carrito por usuario
+GET http://127.0.0.1:8000/carts/user/1
+
+###
+
+### Actualizar carrito (si tiene campos extra luego)
+PUT http://127.0.0.1:8000/carts/1
+Content-Type: application/json
+
+{
+  "user_id": 1
+}
+
+###
+
+### Eliminar carrito
+DELETE http://127.0.0.1:8000/carts/1
+
+###
+
+### Eliminar usuario
+DELETE http://127.0.0.1:8000/users/1
+###Agregar item al carrito 
+

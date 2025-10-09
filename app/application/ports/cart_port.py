@@ -35,3 +35,20 @@ class ICartRepository(ABC):
     def list_all(self) -> List[Cart]:
         """Listar todos los carritos"""
         raise NotImplementedError
+    
+    # @abstractmethod
+    # def add_item(self, cart:Cart, product_id:int, quantity:int)->Cart:
+    #     raise NotImplementedError
+    
+    # @abstractmethod
+    # def remove_item(self, cart:Cart, product_id:int, quantity:int)->Cart:
+    #     raise NotImplementedError
+    
+    # @abstractmethod
+    # def update_item_quantity(self, cart:Cart, product_id:int, quantity:int)->Cart:
+    #     raise NotImplementedError
+    
+    @abstractmethod
+    def clear_cart(self, cart:Cart)->Cart:
+        raise NotImplementedError
+    

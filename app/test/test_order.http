@@ -1,0 +1,45 @@
+#####ORDEN -----------------------------------
+
+POST http://127.0.0.1:8000/orders
+Content-Type: application/json
+
+{
+  "status":"recibido",
+  "total_amount":25.20,
+  "shipping_address":"calle falsa 124",
+  "client_id":1
+}
+
+###Traer por id de cliente
+GET http://127.0.0.1:8000/orders/client/1
+
+
+### traer orden por id
+
+GET http://127.0.0.1:8000/orders/1
+
+###Listar ordenes
+
+GET http://127.0.0.1:8000/orders
+
+###Actualizar orden
+
+PATCH  http://127.0.0.1:8000/orders/1/status
+Content-Type: application/json
+
+{
+  "new_status":"rechazado"
+}
+### Actualizar orden
+PATCH  http://127.0.0.1:8000/orders/1
+Content-Type: application/json
+
+{
+  "status":"pendiente"
+}
+
+
+
+###Eliminar orden
+
+DELETE http://127.0.0.1:8000/orders/1

@@ -1,53 +1,21 @@
-from typing import List, Optional
+from app.infrastructure.repositories.cart_item import ICartItemRepository
+from app.infrastructure.repositories.cart import ICartRepository
+from app.infrastructure.repositories.product import IProductRepository
 from sqlmodel import Session
+from app.domain.models.cart_item import CartItemRead, CartItemUpdate, CartItemCreate
+from app.domain.models.cart import CartRead, CartUpdate, CartCreate
+from typing import List, Optional
+
 from decimal import Decimal
 
-from app.domain.models.cart import Cart, CartCreate, CartRead, CartUpdate
-from app.domain.models.cart_item import CartItemRead, CartItemUpdate, CartItemCreate
-from app.application.ports.cart_port import ICartRepository
-from app.application.ports.user_port import IUserRepository
-from app.application.ports.cart_item_port import ICartItemRepository
-from app.application.ports.product_port import IProductRepository
-
-
-class CartService:
-    def __init__(self, cart_repo: ICartRepository, user_repo: IUserRepository, session: Session, cart_item_repo:ICartItemRepository, product_repo:IProductRepository):
-        self.cart_repo = cart_repo
-        self.user_repo = user_repo
-        self.session = session
+class CartItemService:
+    def __init__(self, cart_item_repo:ICartRepository, cart_repo:ICartRepository, product_repo:IProductRepository, session:Session):
+        
         self.cart_item_repo=cart_item_repo
+        self.cart_repo=cart_repo
         self.product_repo=product_repo
-
-    def create_cart(self, cart_data: CartCreate) -> CartRead:
-        user = self.user_repo.get_by_id(cart_data.user_id)
-        if not user:
-            raise ValueError("User does not exist")
-
-        existing_cart = self.cart_repo.get_by_user_id(cart_data.user_id)
-        if existing_cart:
-            raise ValueError("User already has a cart")
-
-        cart = self.cart_repo.create(cart_data)
-        return CartRead.from_orm(cart)
-
-    def get_cart(self, cart_id: int) -> Optional[CartRead]:
-        cart = self.cart_repo.get_by_id(cart_id)
-        return CartRead.from_orm(cart) if cart else None
-
-    def get_cart_by_user(self, user_id: int) -> Optional[CartRead]:
-        cart = self.cart_repo.get_by_user_id(user_id)
-        return CartRead.from_orm(cart) if cart else None
-
-    def update_cart(self, cart_id: int, update_data: CartUpdate) -> Optional[CartRead]:
-        cart = self.cart_repo.update(cart_id, update_data)
-        return CartRead.from_orm(cart) if cart else None
-    
-    # def clear_cart(self, cart_id:int)->Optional[CartRead]:
-    #     cart=self.cart_repo.get_by_id(cart_id)
-    #     if not cart:
-    #         return None
-    #     self.cart_item_repo.delete()
-    
+        self.session=Session
+        
     def add_item(self, cart_id:int, item_data:CartItemCreate)->CartItemRead:
         cart=self.cart_repo.get_by_id(cart_id)
         if not cart:
@@ -96,14 +64,6 @@ class CartService:
         
         return self.cart_item_repo.delete(item_id)
 
-    def delete_cart(self, cart_id: int) -> bool:
-        return self.cart_repo.delete(cart_id)
-
-    def list_carts(self) -> List[CartRead]:
-        carts = self.cart_repo.list_all()
-        return [CartRead.from_orm(c) for c in carts]
-
-    
     def update_item_quantity(self, item_id:int, new_quantity:int)->CartItemRead:
         item=self.cart_item_repo.get_by_id(item_id)
         if not item:
@@ -138,20 +98,6 @@ class CartService:
         
         return CartItemRead.from_orm(updated_item)
     
-    def clear_cart(self, cart_id:int)->CartRead:
-        cart=self.cart_repo.get_by_id(cart_id)
-        if not cart:
-            raise ValueError("Carrito no encontrado")
-        
-        for item in list(cart.items):
-            self.cart_item_repo.delete(item.id)
-        
-        self.cart_repo.update(cart_id, CartUpdate(total_amount=Decimal("0")))
-        cart.total_amount=Decimal("0")
-        
-        return CartRead.from_orm(cart)
-    
-
     def list_items(self, cart_id:int)->List[CartItemRead]:
         items=self.cart_item_repo.list_by_cart_id(cart_id)
         return [CartItemRead.from_orm(i) for i in items]

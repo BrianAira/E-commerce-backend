@@ -1,0 +1,30 @@
+
+POST http://127.0.0.1:8000/auth/register
+Content-Type: application/json
+
+{
+    "first_name":"Brian",
+    "last_name":"Aira",
+    "email":"brian5ai6r4a6522@gmail.com",
+    "phone":"2622698336",
+    "address":"Calle falsa 123",
+    "password":"123456",
+    "role":"customer"
+}
+###
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+    "first_name":"Brian",
+    "last_name":"Aira",
+    "email":"brian5ai6r4a6522@gmail.com",
+    "phone":"2622698336",
+    "address":"Calle falsa 123",
+    "password":"123456",
+    "role":"customer"
+}
+ ###{
+ ###  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNyIsImlhdCI6MTc1OTQxOTM2MiwiZXhwIjoxNzU5NDIxMTYyfQ.dzDMxTp3zctCea1ru7yeZT42chXMOrQpgKjKuDYzD3k",
+###   "token_type": "bearer"
+### }

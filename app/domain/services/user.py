@@ -12,13 +12,16 @@ class UserService:
 
     def register_user(self, user_create: UserCreate, hashed_password: str) -> User:
         user = User(
-        name=user_create.name,
+        first_name=user_create.first_name,
+        last_name=user_create.last_name,
         email=user_create.email,
         phone=user_create.phone,
+        address=user_create.address,
+        
         hashedPassword=hashed_password  # ya está incluido
     )
         return self.repo.create(user)
-    
+      
     def get_user(self, user_id: int) -> Optional[UserRead]:
         user = self.repo.get_by_id(user_id)
         return UserRead.from_orm(user) if user else None
