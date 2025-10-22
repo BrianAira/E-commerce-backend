@@ -37,4 +37,4 @@ class CartRead(SQLModel):
 class CartUpdate(SQLModel):
     total_amount:Optional[Decimal]=None
     user_id: Optional[int] = None
-    total_amount:Optional[Decimal]
+    # total_amount:Optional[Decimal]

@@ -3,13 +3,15 @@ from sqlmodel import SQLModel
 from app.infrastructure.databases.database import engine, create_db_and_tables
 
 # Importar routers
+from app.api.router.admin_router import router as admin_router
 from app.api.router.user import router as user_router
 from app.api.router.cart import router as cart_router
 from app.api.router.product import router as product_router
 from app.api.router.order import router as order_router
 from app.api.router.order_item import router as order_item_router
 from app.api.router.cart_item import router as cart_item_router
-
+from app.api.router.product_variant import router as product_variants
+from app.api.router.product_image import router as product_image
 from app.api.router.auth import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
 # Crear la app de FastAPI
@@ -34,8 +36,11 @@ app.add_middleware(
 
 # Incluir routers
 app.include_router(user_router, tags=["Users"])
+app.include_router(admin_router)
 app.include_router(cart_router, tags=["Carts"])
 app.include_router(product_router, tags=["Products"])
+app.include_router(product_variants)
+app.include_router(product_image)
 app.include_router(order_router, tags=["Orders"])
 app.include_router(order_item_router, tags=["Order_items"])
 app.include_router(cart_item_router,tags=["CartItem"])

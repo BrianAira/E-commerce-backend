@@ -1,6 +1,6 @@
 from typing import Optional ,List 
 from sqlmodel import SQLModel, Field, Relationship
-from pydantic import EmailStr, BaseModel
+from pydantic import EmailStr, BaseModel, field_validator
 from app.domain.models.enum import UserRol
 
 class UserBase (SQLModel):
@@ -18,9 +18,13 @@ class User(UserBase, table=True):
     cart: Optional["Cart"] = Relationship(back_populates="user")
 
 
+
 class UserCreate(UserBase):
     password:str
-    role:UserRol
+    # role:UserRol
+    @field_validator("role", check_fields=False)
+    def prevent_role_field(cls, v):
+        raise ValueError("El rol no puede asignarse manualmente")
 class UserRead(UserBase):
     id:int
     pass

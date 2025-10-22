@@ -1,0 +1,33 @@
+POST http://127.0.0.1:8000/product-variants/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMDkwMjQ4LCJleHAiOjE3NjExMDQ2NDh9.5Nv54uTpr0NI2kplOH2zbKViBkxD1xIsEWnOD7jzCUU
+
+{
+    "size":"M",
+    "color":"negro",
+    
+    "product_id":1
+}
+
+## "stock":50,
+###TRAER VARIANTES DE UN PRODUCTO
+GET http://127.0.0.1:8000/product-variants/product/2
+
+###
+PATCH http://127.0.0.1:8000/product-variants/2/change-stock
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMTU0ODIzLCJleHAiOjE3NjExNjkyMjN9.NbftWG4epGhERWgCj-w9Xsmsou5Mduyym1b3jNFfgMw
+
+{
+  "delta": 1
+}
+
+# ###
+# PUT http://127.0.0.1:8000/product-variants/2/add-stock
+# Content-Type: application/json
+# 
+
+# {
+#     "stock":50
+# }
+

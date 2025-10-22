@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import List, Optional
 from sqlmodel import Session
 
-from app.domain.models.product import Product, ProductCreate, ProductRead, ProductUpdate
+from app.domain.models.product import Product, ProductCreate, ProductListRead, ProductRead, ProductUpdate
 from app.domain.services.product import ProductService
 from app.infrastructure.repositories.product import ProductRepository
 from app.infrastructure.databases.database import get_session  # <- tu función para obtener Session
 from app.domain.models.stockChange import StockChange
+from app.infrastructure.security.dependencies import get_current_admin
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -17,10 +18,11 @@ def get_product_service(session: Session = Depends(get_session)) -> ProductServi
 
 
 
-@router.post("/", response_model=ProductRead)
+@router.post("/", response_model=ProductRead, summary="Crear producto")
 def create_product(
     product: ProductCreate,
     service: ProductService = Depends(get_product_service),
+    admin=Depends(get_current_admin)
 ):
     return service.create_product(product)
 
@@ -37,15 +39,15 @@ def get_product(product_id:int, service:ProductService=Depends(get_product_servi
 
 @router.get(
     "/",
-    response_model=List[ProductRead],
+    response_model=List[ProductListRead],
     summary="listar todos los productos"
     )
 def list_products(
-    name:Optional[str]=None,
-    category:Optional[str]=None,
+    search:Optional[str]=Query(None, description="Buscar por nombre"),
+    category:Optional[str]=Query(None, description="Filtrar por categorya"),
     service:ProductService=Depends(get_product_service)
 ):
-    return service.list_products(name, category)
+    return service.list_products(search, category)
 
 @router.put(
     "/{product_id}",
@@ -55,7 +57,8 @@ def list_products(
 def update_product(
     product_id:int,
     update_data:ProductUpdate,
-    service:ProductService=Depends(get_product_service)
+    service:ProductService=Depends(get_product_service),
+    admin=Depends(get_current_admin)
 ):
     updated=service.update_product(product_id, update_data)
     if not updated:
@@ -66,7 +69,11 @@ def update_product(
     "/{id_product}",
     response_model=dict
 )
-def delete_product(id_product:int, service:ProductService=Depends(get_product_service)):
+def delete_product(
+    id_product:int, 
+    service:ProductService=Depends(get_product_service),
+    admin=Depends(get_current_admin)
+    ):
     success= service.delete_product(id_product)
     if not success:
         raise HTTPException(status_code=404, detail="Producto no encontrad")
@@ -80,7 +87,8 @@ def delete_product(id_product:int, service:ProductService=Depends(get_product_se
 def change_stock(
     product_id:int,
     delta:StockChange,
-    service:ProductService=Depends(get_product_service)
+    service:ProductService=Depends(get_product_service),
+    admin=Depends(get_current_admin)
 ):
     try:
         
@@ -88,4 +96,7 @@ def change_stock(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     
+    
+# @router.post("/{product_id}/images")
+# def add_image_to_product(product_id:int, data_img:CreateImage):
     

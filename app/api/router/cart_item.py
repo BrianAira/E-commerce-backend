@@ -9,7 +9,8 @@ from app.infrastructure.repositories.cart import CartRepository
 from app.infrastructure.repositories.user import UserRepository
 from app.infrastructure.repositories.cart_item import CartItemRepository
 from app.infrastructure.repositories.product import ProductRepository
-from app.domain.services.cart_item import CartItemService
+# from app.domain.services.cart_item import CartItemService
+from app.domain.services.cart import CartService
 
 router=APIRouter(prefix="/cart-items", tags=["carts"])
 
@@ -17,7 +18,7 @@ def get_cart_item_service(session:Session=Depends(get_session)):
     cart_repo=CartRepository(session)
     cart_item_repo=CartItemRepository(session)
     product_repo=ProductRepository(session)
-    return CartItemService(cart_item_repo,cart_repo , product_repo,session)
+    return CartService(cart_item_repo,cart_repo , product_repo,session)
 
 @router.post(
     "/{cart_id}/items",
@@ -26,7 +27,7 @@ def get_cart_item_service(session:Session=Depends(get_session)):
 )
 def add_item_to_cart(
     item:CartItemCreate,
-    service:CartItemService=Depends(get_cart_item_service)
+    service:CartService=Depends(get_cart_item_service)
     # cart_id:int, item:CartItemCreate, service:CartService=Depends(get_cart_service)
 ):
     try:
@@ -40,7 +41,7 @@ def add_item_to_cart(
 )
 def list_cart_items(
     cart_id:int,
-    service:CartItemService=Depends(get_cart_item_service)
+    service:CartService=Depends(get_cart_item_service)
 ):
     
     return service.list_items(cart_id)
@@ -52,7 +53,7 @@ def list_cart_items(
 def update_item_in_cart(
     item_id:int,
     update_data:CartItemUpdate,
-    service:CartItemService=Depends(get_cart_item_service)
+    service:CartService=Depends(get_cart_item_service)
 ):
     try:
         return service.update_item_quantity(item_id, update_data.quantity)
@@ -66,7 +67,7 @@ def update_item_in_cart(
 def remove_item_from_cart(
    
     item_id:int,
-    service:CartItemService=Depends(get_cart_item_service)
+    service:CartService=Depends(get_cart_item_service)
 ):
     success=service.remove_item(item_id)
     if not success:

@@ -5,26 +5,22 @@ Content-Type: application/json
 {
     "first_name":"Brian",
     "last_name":"Aira",
-    "email":"brian5ai6r4a6522@gmail.com",
+    "email":"brianaira622@gmail.com",
     "phone":"2622698336",
     "address":"Calle falsa 123",
-    "password":"123456",
-    "role":"customer"
+    "password":"123456"
+
 }
 ###
 POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-    "first_name":"Brian",
-    "last_name":"Aira",
-    "email":"brian5ai6r4a6522@gmail.com",
-    "phone":"2622698336",
-    "address":"Calle falsa 123",
-    "password":"123456",
-    "role":"customer"
+    "email":"brianaira622@gmail.com",   
+    "password":"123456"
+    
 }
  ###{
- ###  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNyIsImlhdCI6MTc1OTQxOTM2MiwiZXhwIjoxNzU5NDIxMTYyfQ.dzDMxTp3zctCea1ru7yeZT42chXMOrQpgKjKuDYzD3k",
-###   "token_type": "bearer"
+# "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYwMDU2Nzk0LCJleHAiOjE3NjAwNTg1OTR9.hDHtQ4apAka9kgtPMfP3CAvK4KOA0k-_Md-I9e44qj4",
+#   "token_type": "bearer"
 ### }

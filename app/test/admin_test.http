@@ -1,0 +1,32 @@
+POST http://127.0.0.1:8000/admin/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYwOTMwODA4LCJleHAiOjE3NjA5MzI2MDh9.fFB9CWal7PexhB1oakF2loPg4UMgsOkfg9KRNFzEwus
+
+{
+    "first_name": "Brian",
+    "last_name": "Aira",
+    "email": "aira@gmail.com",
+    "phone": "2622698336",
+    "address": "Steindl 14 de marzo",
+    "password": "123456"
+}
+
+###
+
+GET http://127.0.0.1:8000/admin/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMDkwMjQ4LCJleHAiOjE3NjExMDQ2NDh9.5Nv54uTpr0NI2kplOH2zbKViBkxD1xIsEWnOD7jzCUU
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzYwOTMwNDAyLCJleHAiOjE3NjA5MzIyMDJ9.hoIRHcs3TlXm5Fih81JLubSmiQyUhw_5jL6ZKfo1M6w
+
+# {
+#   "user": {
+#     "first_name": "Brian",
+#     "last_name": "Aira",
+#     "email": "brianaira@gmail.com",
+#     "phone": "2622698336",
+#     "address": "Calle falsa 123",
+#     "id": 2
+#   },
+#   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzYwOTMwNDAyLCJleHAiOjE3NjA5MzIyMDJ9.hoIRHcs3TlXm5Fih81JLubSmiQyUhw_5jL6ZKfo1M6w",
+#   "token_type": "bearer"
+# }

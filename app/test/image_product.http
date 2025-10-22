@@ -1,0 +1,13 @@
+GET http://127.0.0.1:8000/product-images/product/1
+
+###
+POST http://127.0.0.1:8000/product-images/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMDg2NzMyLCJleHAiOjE3NjEwODg1MzJ9.uftjqgug9xHMVk3I3Y3ARLaMYm8ArSv8fvF1j-53BEI
+
+{
+    "url":"https://media.cristobalcolon.com/wp-content/uploads/2025/09/25172414/1595-O2-3.jpg",
+    "is_main":true,
+    "product_id":1
+}
+

@@ -36,7 +36,8 @@ class OrderService:
         return [OrderRead.from_orm(o) for o in orders]
     
     def get_by_client(self, client_id:int)->List[OrderRead]:
-        return self.get_by_client(client_id)
+        orders=self.order_repo.get_by_client(client_id)
+        return [OrderRead.from_orm(o) for o in orders]
     
     def update_order(self, order_id:int, update_data:OrderUpdate)->Optional[OrderRead]:           
             
@@ -53,24 +54,24 @@ class OrderService:
         updated=self.order_repo.update(order_id, update_data)
         return OrderRead.from_orm(updated)
     
-    def add_item_to_order(self, order_id:int, product_id:int, quantity:int, subtotal:Decimal):
-        order=self.order_repo.get_by_id(order_id)
-        if not order:
-            raise ValueError("Orden no encontrada")
+    # def add_item_to_order(self, order_id:int, product_id:int, quantity:int, subtotal:Decimal):
+    #     order=self.order_repo.get_by_id(order_id)
+    #     if not order:
+    #         raise ValueError("Orden no encontrada")
         
-        item_data={
-            "order_id":order_id,
-            "product_id":product_id,
-            "quantity":quantity,
-            "subtotal":subtotal
-        }
+    #     item_data={
+    #         "order_id":order_id,
+    #         "product_id":product_id,
+    #         "quantity":quantity,
+    #         "subtotal":subtotal
+    #     }
         
-        item=self.order_item_repo.create(item_data)
+    #     item=self.order_item_repo.create(item_data)
         
-        order.total_amount+=subtotal
-        self.order_repo.update(order)
+    #     order.total_amount+=subtotal
+    #     self.order_repo.update(order)
         
-        return item
+    #     return item
     
     def delete_order(self, order_id:int)->bool:
         order=self.order_repo.get_by_id(order_id)

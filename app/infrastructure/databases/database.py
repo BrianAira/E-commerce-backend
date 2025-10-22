@@ -11,12 +11,11 @@ DATABASE_URL=f"postgresql+psycopg2://{settings.DATABASE_USERNAME}:{settings.DATA
 engine = create_engine(DATABASE_URL, echo=True)
 
 
-# Dependencia para obtener una sesión por request
+# Dependencia para obtener una sesión por request 
 def get_session():
     with Session(engine) as session:
         yield session
-        # ⚠️ OJO: No haces commit aquí, dejas que lo haga tu servicio
-        # así tenés más control y evitas commits innecesarios
+    #no hace commit, lo hace el servicio    
 
 
 # Para tipar las dependencias (más limpio en routers/servicios)

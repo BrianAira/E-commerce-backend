@@ -1,6 +1,7 @@
 from typing import List, Optional
 from sqlmodel import Session
 
+from app.domain.models.enum import UserRol
 from app.domain.models.user import User, UserCreate, UserRead, AdminUpdate
 from app.application.ports.user_port import IUserRepository
 
@@ -10,15 +11,20 @@ class UserService:
         self.repo = repo
         self.session = session
 
-    def register_user(self, user_create: UserCreate, hashed_password: str) -> User:
+    def register_user(
+        self, 
+        user_create: UserCreate, 
+        hashed_password: str,
+        role:UserRol=UserRol.CUSTOMER
+        ) -> User:
         user = User(
         first_name=user_create.first_name,
         last_name=user_create.last_name,
         email=user_create.email,
         phone=user_create.phone,
         address=user_create.address,
-        
-        hashedPassword=hashed_password  # ya está incluido
+        hashedPassword=hashed_password,  # ya está incluido
+        role=role,
     )
         return self.repo.create(user)
       

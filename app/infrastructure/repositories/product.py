@@ -1,7 +1,8 @@
 from typing import List, Optional 
-from sqlmodel import Session , select 
+from sqlmodel import Session, func , select , or_
+from sqlalchemy.orm import selectinload
 from app.application.ports.product_port import IProductRepository
-from app.domain.models.product import Product, ProductCreate
+from app.domain.models.product import Product, ProductCreate, ProductListRead
 
 
 class ProductRepository(IProductRepository):
@@ -25,8 +26,18 @@ class ProductRepository(IProductRepository):
         return product
     
     def get_all(self)->List[Product]:
-        return list(self.session.exec(select(Product)))
-    
+        query=(
+            select(Product)
+            .options(selectinload(Product.images))
+            # .where(Product.is_active==True)
+        )
+        
+        products=self.session.exec(query).all()
+        
+       
+            
+        # return product_list
+        return products    
     def delete(self, product_id:int)->bool:
         product=self.get_by_id(product_id)
         if not product:
@@ -55,3 +66,12 @@ class ProductRepository(IProductRepository):
         return list(self.session.exec(statement))
         # return super().get_by_category(product_category)    
         
+    def search(self, search:Optional[str]=None, category:Optional[str]=None)->List[Product]:
+        statement=select(Product)
+        
+        if search:
+            statement = statement.where(func.lower(Product.name).contains(search.lower()))
+        if category:
+            statement=statement.where(Product.category==category)
+            
+        return list(self.session.exec(statement))

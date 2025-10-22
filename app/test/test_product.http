@@ -6,16 +6,61 @@ GET http://127.0.0.1:8000/products
 
 POST http://127.0.0.1:8000/products
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMDkwMjQ4LCJleHAiOjE3NjExMDQ2NDh9.5Nv54uTpr0NI2kplOH2zbKViBkxD1xIsEWnOD7jzCUU
 
 {
-  "name": "Producto 1",
-  "description": "Optional",
-  "entry_price": 10.1,
-  "sale_price":10.1,
+  "name": "Camisa Volcom Treehorn 2",
+  "description": "Camisa Volcom Treehorn. Classic fit. Etiqueta tejida",
+  "entry_price":  29.999,
+  "min_wholesale_quantity":6,
+  "wholesale_price":35.000,
+  "retail_price":40.000,
   "is_active": true,
-  "category":"a555",
-  "stock": 2
-}
+  "category":"camisa",
+  "gender":"hombre",
+  "stock": 60
+} 
+###"image":"https://media.cristobalcolon.com/wp-content/uploads/2025/09/25172414/1595-O2-3.jpg",
+DELETE http://127.0.0.1:8000/products/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYwOTMwODA4LCJleHAiOjE3NjA5MzI2MDh9.fFB9CWal7PexhB1oakF2loPg4UMgsOkfg9KRNFzEwus
+
+
+# {
+#   "name": "Camisa Volcom Treehorn 2",
+#   "description": "Camisa Volcom Treehorn. Classic fit. Etiqueta tejida",
+#   "image":"https://media.cristobalcolon.com/wp-content/uploads/2025/09/26114241/2045-O2-1.jpg",
+#   "entry_price":  59.999,
+#   "sale_price": 59.999,
+#   "is_active": true,
+#   "category":"Hombre",
+#   "stock": 7
+# } 
+
+
+# {
+#   "name": "Lycra Volcom Relax UV50 2",
+#   "description": "Regular fit. Rompevientos. Puños elástizados. Estampa en delantero y espalda. Bolsillos delanteros. Broches snap metálicos. V.Co-Tech LIGERO  Este producto cuenta con materiales lijeros.",
+#   "image":"https://media.cristobalcolon.com/wp-content/uploads/2025/10/03174025/8787-O2-1.jpg",
+#   "entry_price":  79.999,
+#   "sale_price": 79.999,
+#   "is_active": true,
+#   "category":"Hombre",
+#   "stock": 7
+# } 
+
+# {
+#   "name": "Rompevientos Volcom Coach Wellingster 2",
+#   "description": "Regular fit. Rompevientos. Puños elástizados. Estampa en delantero y espalda. Bolsillos delanteros. Broches snap metálicos. V.Co-Tech LIGERO  Este producto cuenta con materiales lijeros.",
+#   "image":"https://media.cristobalcolon.com/wp-content/uploads/2025/10/08172419/4544-O5-1-1.jpg",
+#   "entry_price":  99.999,
+#   "sale_price": 99.999,
+#   "is_active": true,
+#   "category":"Hombre",
+#   "stock": 7
+# } 
+
+
+# "image": "https://via.placeholder.com/500x500.png?text=Producto+7"
 
 ### TRAER PRODUCTO POR ID
 GET http://127.0.0.1:8000/products/2

@@ -66,9 +66,12 @@ class CartService:
         # cart_item=self.cart_item_repo.create(item_data, cart_id)
         
         cart_item=self.cart_item_repo.create(
-            CartItemUpdate(quantity=item_data.quantity, subtotal=subtotal),
-            cart_id,
-            product.id
+            CartItemCreate(
+                cart_id=cart_id,
+                product_id=product.id,
+                quantity=item_data.quantity,
+                subtotal=subtotal
+            )
         )
         
         cart.total_amount=sum(i.subtotal for i in cart.items) + subtotal
@@ -117,7 +120,7 @@ class CartService:
             raise ValueError("La cantidad debe ser al menos 1")
         
         delta=new_quantity-item.quantity
-        if product.stock<delta:
+        if delta>0 and product.stock<delta:
             raise ValueError("Stock insuficiente")
         
         new_subtotal=product.sale_price*Decimal(new_quantity)
@@ -144,6 +147,10 @@ class CartService:
             raise ValueError("Carrito no encontrado")
         
         for item in list(cart.items):
+            product=self.product_repo.get_by_id(item.product_id)
+            if product:
+                product.stock+=item.quantity
+                self.product_repo.update(product)
             self.cart_item_repo.delete(item.id)
         
         self.cart_repo.update(cart_id, CartUpdate(total_amount=Decimal("0")))
@@ -155,3 +162,11 @@ class CartService:
     def list_items(self, cart_id:int)->List[CartItemRead]:
         items=self.cart_item_repo.list_by_cart_id(cart_id)
         return [CartItemRead.from_orm(i) for i in items]
+    
+    
+    
+    def _recaulculate_total(self, cart_id:int)->Decimal:
+        cart=self.cart_repo.get_by_id(cart_id)
+        total=sum(i.subtotal for i in cart.items)
+        self.cart_repo.update(cart_id, CartUpdate(total_amount=total))
+        return total

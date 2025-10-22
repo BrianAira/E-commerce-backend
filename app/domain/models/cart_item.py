@@ -13,10 +13,11 @@ class CartItem(CartItemBase, table=True):
     cart_id:int=Field(foreign_key="cart.id")
     cart:Optional["Cart"]=Relationship(back_populates="items")
     
+    product_variant_id:Optional[int]=Field(foreign_key="productvariant.id")
     
     
-    product_id:int=Field(foreign_key="product.id")
-    product:Optional["Product"]=Relationship(back_populates="cart_items")#Relacion inversa hacia producto
+    # product_id:int=Field(foreign_key="product.id")
+    # product:Optional["Product"]=Relationship(back_populates="cart_items")#Relacion inversa hacia producto
     
     
     
