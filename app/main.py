@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from sqlmodel import SQLModel
-from app.infrastructure.databases.database import engine, create_db_and_tables
+from app.core.database import engine, create_db_and_tables
 
 # Importar routers
 from app.api.router.admin_router import router as admin_router
