@@ -20,6 +20,7 @@ class ProductVariantCreate(ProductVariantBase):
 class ProductVariantRead(ProductVariantBase):
     id:int
     product_id:int
+    model_config={"from_attributes":True}
 
 class ProductVariantUpdate(SQLModel):
     size:Optional[str]=None

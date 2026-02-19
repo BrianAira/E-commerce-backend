@@ -22,6 +22,9 @@ class ProductImageCreate(ProductImageBase):
 class ProductImageRead(ProductImageBase):
     product_id:int
     id:int
+    model_config={
+        "from_attributes": True
+    }
     
 class ProductImageUpdate(SQLModel):
     url:Optional[str]=None

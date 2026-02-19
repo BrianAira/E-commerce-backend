@@ -4,6 +4,8 @@ from decimal import Decimal
 from datetime import datetime, timezone
 
 from app.domain.models.enum import OrderStatus
+from app.domain.models.user import UserRead
+from app.domain.models.order_item import OrderItemRead
 
 class OrderBase(SQLModel):
     status:OrderStatus=Field(default=OrderStatus.PENDING)
@@ -16,6 +18,8 @@ class Order(OrderBase, table=True):
     created_at:datetime=Field(default_factory=lambda:datetime.now(timezone.utc))
 
     client_id:int=Field(foreign_key="user.id")
+    
+    # client:"User"=Relationship(back_populates="orders")
 
     items:List["OrderItem"]=Relationship(back_populates="order")
     
@@ -27,6 +31,9 @@ class OrderCreate(OrderBase):
 class OrderRead(OrderBase):
     id:int
     client_id:int
+    
+    client:Optional[UserRead]=None
+    items:Optional[List[OrderItemRead]]=None
     pass
 
 class OrderUpdate(SQLModel):
