@@ -5,7 +5,7 @@ from app.domain.models.user import User
 from app.domain.models.enum import UserRol
 from app.core.config import settings
 from sqlmodel import Session, select
-from app.infrastructure.databases.database import get_session
+from app.core.database import get_session
 
 oauth2_scheme=OAuth2PasswordBearer(tokenUrl="auth/login")
 
