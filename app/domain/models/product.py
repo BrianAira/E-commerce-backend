@@ -44,6 +44,8 @@ class ProductRead(ProductBase):
     images:Optional[List[ProductImageRead]]=[]
     variants:Optional[List[ProductVariantRead]]=[]
     
+    model_config={"from_attributes":True}
+    
     # cart_id: Optional[int] = None
     
 class ProductListRead(ProductBase):
@@ -57,7 +59,7 @@ class ProductUpdate(SQLModel):
     entry_price: Optional[Decimal] = None
     # sale_price:Optional[Decimal]=None
     is_active:Optional[bool]=None
-    stock: Optional[int] = None
+    # stock: Optional[int] = None
     category:Optional[str]=None
     wholesale_price:Optional[Decimal]=None
     retail_price:Optional[Decimal]=None
