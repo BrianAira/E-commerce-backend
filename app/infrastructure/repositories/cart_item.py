@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import List, Optional
 from sqlmodel import Session, select
 from app.domain.models.cart_item import CartItem, CartItemCreate, CartItemUpdate
@@ -7,12 +8,13 @@ class CartItemRepository(ICartItemRepository):
     def __init__(self, session:Session):
         self.session=session
         
-    def create(self, item:CartItemCreate, cart_id:int, product_id:int)->CartItem:
+    def create(self, item:CartItemCreate, cart_id:int,  subtotal:Decimal)->CartItem:
         db_item=CartItem(
             cart_id=cart_id,
-            product_id=product_id,
+            product_id=item.product_id,
+            product_variant_id=item.product_variant_id,
             quantity=item.quantity,
-            subtotal=item.subtotal
+            subtotal=subtotal
         )
         self.session.add(db_item)
         self.session.commit()
@@ -48,3 +50,12 @@ class CartItemRepository(ICartItemRepository):
         self.session.delete(db_item)
         self.session.commit()
         return True
+    
+    def find_by_variant(self, cart_id:int, product_variant_id:int)->Optional[CartItem]:
+        statement=select(CartItem).where(
+            CartItem.cart_id==cart_id,
+            CartItem.product_variant_id==product_variant_id
+        )
+        
+        result=self.session.exec(statement).first()
+        return result

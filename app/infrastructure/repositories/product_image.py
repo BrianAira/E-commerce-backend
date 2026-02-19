@@ -1,7 +1,8 @@
 from typing import List, Optional
-from sqlmodel import Session, select
+from sqlmodel import Session, select, update
+from sqlalchemy.exc import SQLAlchemyError
 
-from app.domain.models.product_image import ProductImage, ProductImageCreate
+from app.domain.models.image import ProductImage, ProductImageCreate
 from app.application.ports.product_image_port import IProductImageRepository
 
 
@@ -30,3 +31,38 @@ class ProductImageRepository(IProductImageRepository):
         self.session.delete(image)
         self.session.commit()
         return True
+    
+    def find_by_url(self, url: str, product_id: int) -> Optional[ProductImage]:
+        statement = select(ProductImage).where(
+            ProductImage.url == url,
+            ProductImage.product_id == product_id
+        )
+        return self.session.exec(statement).first()
+    
+    def set_main_image(self, product_id: int, image_id: int) -> bool:
+        try:
+            # Desactivar todas las imágenes principales del producto
+            self.session.exec(
+                update(ProductImage)
+                .where(ProductImage.product_id == product_id)
+                .values(is_main=False)
+            )
+
+            # Activar la nueva principal
+            result = self.session.exec(
+                update(ProductImage)
+                .where(
+                    ProductImage.id == image_id,
+                    ProductImage.product_id == product_id
+                )
+                .values(is_main=True)
+                .returning(ProductImage.id)
+            ).first()
+
+            self.session.commit()
+            return bool(result)
+
+        except SQLAlchemyError:
+            self.session.rollback()
+            return False
+

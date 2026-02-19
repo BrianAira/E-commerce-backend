@@ -28,16 +28,17 @@ class ProductRepository(IProductRepository):
     def get_all(self)->List[Product]:
         query=(
             select(Product)
-            .options(selectinload(Product.images))
+            .options(selectinload(Product.images),
+                     selectinload(Product.variants)
+                     )
             # .where(Product.is_active==True)
         )
         
         products=self.session.exec(query).all()
         
-       
-            
         # return product_list
         return products    
+    
     def delete(self, product_id:int)->bool:
         product=self.get_by_id(product_id)
         if not product:
