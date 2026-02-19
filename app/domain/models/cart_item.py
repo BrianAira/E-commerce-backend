@@ -15,20 +15,23 @@ class CartItem(CartItemBase, table=True):
     
     product_variant_id:Optional[int]=Field(foreign_key="productvariant.id")
     
-    
+    variant:Optional["ProductVariant"]=Relationship()
     # product_id:int=Field(foreign_key="product.id")
     # product:Optional["Product"]=Relationship(back_populates="cart_items")#Relacion inversa hacia producto
     
     
     
 class CartItemCreate(CartItemBase):
-    cart_id:int
+    # cart_id:int
     product_id:int
+    product_variant_id:int
+    # subtotal:Decimal
     
 class CartItemRead(CartItemBase):
     id:int
     cart_id:int
-    product_id:int
+    product_variant_id:int
+    # product_id:int
     subtotal:Decimal
     
 class CartItemUpdate(SQLModel):
