@@ -30,7 +30,7 @@ class CartResponse(BaseModel):
     items:List[CartItemResponse]=[]
     
     total_items:int=0
-    total_price=float=0.0
+    total_price:float=0.0
     
     model_config=ConfigDict(from_attributes=True)
     
