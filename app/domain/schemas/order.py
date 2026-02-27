@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
@@ -39,3 +39,10 @@ class OrderResponse(OrderBase):
     items:List[OrderItemResponse]=[]
     
     model_config=ConfigDict(from_attributes=True) 
+    
+class OrderFilters(BaseModel):
+    status:Optional[OrderStatus]=None
+    location:Optional[str]=None
+    postal_code:Optional[str]=None
+    start_date:Optional[date]=None
+    end_date:Optional[date]=None
