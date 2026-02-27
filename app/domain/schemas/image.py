@@ -8,7 +8,7 @@ class ImageBase(BaseModel):
     
     url:str=Field(..., description="URl de la imagen")
     is_main:bool=Field(default=False, description="Imagen principal?")
-    position:int=Field(default=0, description="Orden de presentacion en galeria")
+    # position:int=Field(default=0, description="Orden de presentacion en galeria")
     
     
 class ImagenCreate(ImageBase):
