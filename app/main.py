@@ -1,58 +1,43 @@
 from fastapi import FastAPI
-from sqlmodel import SQLModel
-from app.core.database import engine, create_db_and_tables
-
-# Importar routers
-from app.api.router.admin_router import router as admin_router
-from app.api.router.user import router as user_router
-from app.api.router.cart import router as cart_router
-from app.api.router.product import router as product_router
-from app.api.router.order import router as order_router
-from app.api.router.order_item import router as order_item_router
-from app.api.router.cart_item import router as cart_item_router
-from app.api.router.product_variant import router as product_variants
-from app.api.router.product_image import router as product_image
-from app.api.router.auth import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
-# Crear la app de FastAPI
-app = FastAPI(
-    title="API eCommerce",
-    description="API para gestionar usuarios y carritos",
-    version="1.0.0"
-)
 
-origins=[
-    "http://localhost:5173",  # tu frontend
-    "http://localhost:3000",
+from app.core.database import Base, engine
+from app.core.config import settings
+from app.entrypoints.api.order_router import router as order_router
+from app.entrypoints.api.cart_router import router as cart_router
+from app.entrypoints.api.user_router import router as user_router
+from app.entrypoints.api.product_router import router as product_router
+
+
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Mi Odisea")
+
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
-# Incluir routers
-app.include_router(user_router, tags=["Users"])
-app.include_router(admin_router)
-app.include_router(cart_router, tags=["Carts"])
-app.include_router(product_router, tags=["Products"])
-app.include_router(product_variants)
-app.include_router(product_image)
-app.include_router(order_router, tags=["Orders"])
-app.include_router(order_item_router, tags=["Order_items"])
-app.include_router(cart_item_router,tags=["CartItem"])
 
-app.include_router(auth_router, tags=["Auth"])
-# Crear las tablas al iniciar la app
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
-    print("✅ Base de datos y tablas creadas")
+# @app.on_event("startup")
+# def on_startup():
+#     init_db()
 
-# Ruta raíz opcional
+app.include_router(product_router)
+app.include_router(user_router)
+app.include_router(cart_router)
+app.include_router(order_router)
+# app.include_router(dashboard_router)
+
 @app.get("/")
 def root():
-    return {"message": "API eCommerce funcionando correctamente"}
+    return {"status": "ok", "message": "Mi odisea api funciona"}

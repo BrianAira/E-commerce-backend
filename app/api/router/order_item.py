@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlmodel import Session
 
-from app.infrastructure.databases.database import get_session
+from app.core.database import get_session
 from app.domain.services.order_item import OrderItemService
 from app.domain.models.order_item import OrderItemRead, OrderItemCreate, OrderItemUpdate
 from app.infrastructure.repositories.order_item import OrderItemRepository

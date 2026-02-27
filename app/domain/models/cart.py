@@ -1,40 +1,39 @@
-from typing import Optional, List
-from sqlmodel import SQLModel, Field, Relationship
-from decimal import Decimal
 
 
-class CartBase(SQLModel):
-    pass
+from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy.orm import relationship
+
+from app.core.database import Base
 
 
-class Cart(CartBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    total_amount:Optional[Decimal]=Field(default=0)
+# class CartStatus(str, Enum):
+#     OPEN = "open"
+#     CHECKED_OUT = "checked_out"
+
+
+class Cart(Base):
     
+    __tablename__="carts"
+    
+    id=Column(Integer, index=True, primary_key=True)
+    user_id=Column(Integer,ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    
+    user=relationship("User", back_populates="cart")
+    items=relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")    
+    # status: CartStatus = Field(default=CartStatus.OPEN)
 
-    # Relación 1 a 1 con User
-    user_id: int = Field(foreign_key="user.id", unique=True, index=True)
+    @property
+    def total_items(self) -> int:
+        """Suma rápida de todas las cantidades en el carrito."""
+        return sum(item.quantity for item in self.items)
 
-    # Relación inversa hacia User
-    user: Optional["User"] = Relationship(back_populates="cart")
-
-    # Relación con productos (1 carrito puede tener varios productos)
-    items: List["CartItem"] = Relationship(back_populates="cart")
-
-
-# ---------- MODELOS Pydantic ----------
-
-class CartCreate(SQLModel):
-    user_id: int
-
-
-class CartRead(SQLModel):
-    id: int
-    user_id: int
-    total_amount:Optional[Decimal]
-
-
-class CartUpdate(SQLModel):
-    total_amount:Optional[Decimal]=None
-    user_id: Optional[int] = None
-    # total_amount:Optional[Decimal]
+# class CartItem(SQLModel, table=True):
+#     id: Optional[int] = Field(default=None, primary_key=True)
+#     cart_id: int = Field(
+#         sa_column=Column(Integer, ForeignKey("cart.id", ondelete="CASCADE")),
+#     )
+#     product_id: int = Field(
+#         sa_column=Column(Integer, ForeignKey("product.id", ondelete="CASCADE")),
+#     )
+#     quantity: int = Field(default=1)
+#     unit_price: float

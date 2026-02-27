@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from sqlmodel import Session
 
-from app.infrastructure.databases.database import get_session
-from app.domain.models.product_image import ProductImageCreate, ProductImageRead
+from app.core.database import get_session
+from app.domain.models.image import ProductImageCreate, ProductImageRead
 from app.domain.services.product_image import ProductImageService
 from app.infrastructure.repositories.product_image import ProductImageRepository
 from app.infrastructure.repositories.product import ProductRepository
 # Si usás autenticación basada en roles:
-from app.infrastructure.security.dependencies import get_current_admin
+from app.infrastructure.security.auth_utils import get_current_admin
 
 
 router = APIRouter(prefix="/product-images", tags=["Product Images"])

@@ -8,15 +8,25 @@ Content-Type: application/json
 
 ###
 
-### Obtener carrito por ID
-GET http://127.0.0.1:8000/carts/1
+### Obtener carrito por token
+GET http://127.0.0.1:8000/carts/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2IiwiaWF0IjoxNzYxMzI0NDkxLCJleHAiOjE3NjEzMzg4OTF9.DlSJ8gm-O9hj9hwSFNINjXdUJZSGvbIUHNzBqUFBNfQ
 
 ###
 
 ### Obtener carrito por usuario
-GET http://127.0.0.1:8000/carts/user/1
+GET http://127.0.0.1:8000/carts/user/6
 
-###
+###Agregar item a un carrito 
+POST http://127.0.0.1:8000/carts/me/items
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2IiwiaWF0IjoxNzYxMzI0NDkxLCJleHAiOjE3NjEzMzg4OTF9.DlSJ8gm-O9hj9hwSFNINjXdUJZSGvbIUHNzBqUFBNfQ
+
+{
+  "quantity":1,
+  "product_id":1,
+  "product_variant_id":1
+}
 
 ### Actualizar carrito (si tiene campos extra luego)
 PUT http://127.0.0.1:8000/carts/1

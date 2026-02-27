@@ -1,4 +1,6 @@
 ####PRODUCTOS#######-------------------------------------------------
+GET http://127.0.0.1:8000/products/admin
+
 ###LISTAR PRODUCTOS
 GET http://127.0.0.1:8000/products
 
@@ -6,7 +8,7 @@ GET http://127.0.0.1:8000/products
 
 POST http://127.0.0.1:8000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMDkwMjQ4LCJleHAiOjE3NjExMDQ2NDh9.5Nv54uTpr0NI2kplOH2zbKViBkxD1xIsEWnOD7jzCUU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMTcyMjk5LCJleHAiOjE3NjExODY2OTl9.iZaVTx0SdkRNZvP8PLYJU-ux6VuaIX31ZgYd_W7-9mE
 
 {
   "name": "Camisa Volcom Treehorn 2",
@@ -20,6 +22,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0I
   "gender":"hombre",
   "stock": 60
 } 
+
 ###"image":"https://media.cristobalcolon.com/wp-content/uploads/2025/09/25172414/1595-O2-3.jpg",
 DELETE http://127.0.0.1:8000/products/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYwOTMwODA4LCJleHAiOjE3NjA5MzI2MDh9.fFB9CWal7PexhB1oakF2loPg4UMgsOkfg9KRNFzEwus

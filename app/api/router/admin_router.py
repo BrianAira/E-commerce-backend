@@ -7,8 +7,8 @@ from sqlmodel import Session
 from app.core.security import get_password_hash
 from app.domain.models.enum import UserRol
 from app.domain.models.user import AdminUpdate, UserCreate, UserRead
-from app.infrastructure.databases.database import get_session
-from app.infrastructure.security.dependencies import get_current_admin
+from app.core.database import get_session
+from app.infrastructure.security.auth_utils import get_current_admin
 from app.infrastructure.repositories.user import UserRepository
 from app.domain.services.user import UserService
 

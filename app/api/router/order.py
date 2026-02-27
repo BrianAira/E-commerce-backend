@@ -2,12 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlmodel import Session
 
-from app.infrastructure.databases.database import get_session
+from app.core.database import get_session
 from app.domain.services.order import OrderService
 from app.domain.models.order import OrderCreate, OrderRead, OrderUpdate
 from app.infrastructure.repositories.order import OrderRepository
 from app.infrastructure.repositories.order_item import OrderItemRepository
 from app.domain.models.status_update import StatusUpdate
+from app.infrastructure.security.auth_utils import get_current_admin, get_current_user
 
 
 
@@ -23,7 +24,12 @@ def get_order_service(session:Session=Depends(get_session)):
     response_model=OrderRead,
     summary="Crear orden"
 )
-def create_order(order:OrderCreate, service:OrderService=Depends(get_order_service)):
+def create_order(
+    order:OrderCreate, 
+    service:OrderService=Depends(get_order_service),
+    current_user=Depends(get_current_user)
+    ):
+    order.client_id=current_user.id
     return service.create_order(order)
 
 @router.get(
@@ -31,7 +37,11 @@ def create_order(order:OrderCreate, service:OrderService=Depends(get_order_servi
     response_model=OrderRead,
     summary="TRaer orden por id"
 )
-def get_order(order_id:int, service:OrderService=Depends(get_order_service)):
+def get_order(
+    order_id:int, 
+    service:OrderService=Depends(get_order_service),
+    admin=Depends(get_current_admin)
+    ):
     order=service.get_order_by_id(order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Orden no encontrada")
@@ -42,8 +52,12 @@ def get_order(order_id:int, service:OrderService=Depends(get_order_service)):
     "/",
     response_model=List[OrderRead],
     summary="Listar ordenes"
+    
 )
-def list_orders(service:OrderService=Depends(get_order_service)):
+def list_orders(
+    service:OrderService=Depends(get_order_service),
+    admin=Depends(get_current_admin)
+    ):
     return service.list_orders()
 
 @router.patch( ##No definido correctamente
@@ -62,7 +76,11 @@ def update_order(order_id:int, order_data:OrderUpdate, service:OrderService=Depe
     "/{order_id}",
     summary="Eliminar orden"
     )
-def delete_order(order_id:int, service:OrderService=Depends(get_order_service)):
+def delete_order(
+    order_id:int, 
+    service:OrderService=Depends(get_order_service),
+    admin=Depends(get_current_admin)
+    ):
     deleted=service.delete_order(order_id)
     
     if not deleted:
@@ -75,7 +93,12 @@ def delete_order(order_id:int, service:OrderService=Depends(get_order_service)):
     response_model=OrderRead,
     summary="Cambiar estado de orden"
 )
-def change_order_status(order_id:int, new_status:StatusUpdate, service:OrderService=Depends(get_order_service)):
+def change_order_status(
+    order_id:int, 
+    new_status:StatusUpdate, 
+    service:OrderService=Depends(get_order_service),
+    admin=Depends(get_current_admin)
+    ):
     # order=service.order_repo.get_by_id(order_id)
     # if not order:
     #     raise ValueError("Orden no encontrada")
@@ -95,5 +118,8 @@ def change_order_status(order_id:int, new_status:StatusUpdate, service:OrderServ
     summary="Traer por cliente"
 )
 
-def get_by_client(client_id:int, service:OrderService=Depends(get_order_service)):
+def get_by_client(
+    client_id:int, 
+    service:OrderService=Depends(get_order_service),
+    admin=Depends(get_current_admin)):
     return service.order_repo.get_by_client(client_id)

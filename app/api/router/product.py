@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import List, Optional
 from sqlmodel import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.domain.models.product import Product, ProductCreate, ProductListRead, ProductRead, ProductUpdate
 from app.domain.services.product import ProductService
 from app.infrastructure.repositories.product import ProductRepository
-from app.infrastructure.databases.database import get_session  # <- tu función para obtener Session
+from app.core.database import get_session  # <- tu función para obtener Session
 from app.domain.models.stockChange import StockChange
-from app.infrastructure.security.dependencies import get_current_admin
+from app.infrastructure.security.auth_utils import get_current_admin
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -24,7 +25,24 @@ def create_product(
     service: ProductService = Depends(get_product_service),
     admin=Depends(get_current_admin)
 ):
-    return service.create_product(product)
+    try:
+        return service.create_product(product)
+    except IntegrityError:
+        raise HTTPException(status_code=404, detail="Ya existe un producto con ese nombre")
+
+@router.get(
+    "/admin",
+    response_model=List[ProductRead],
+    summary="listar todos los productos completos"
+    )
+def list_products(
+    search:Optional[str]=Query(None, description="Buscar por nombre"),
+    category:Optional[str]=Query(None, description="Filtrar por categorya"),
+    service:ProductService=Depends(get_product_service)
+):
+    return service.repository.get_all()
+
+
 
 @router.get(
     "/{product_id}",
@@ -37,17 +55,20 @@ def get_product(product_id:int, service:ProductService=Depends(get_product_servi
         raise HTTPException(status_code=404, detail="Producto no encontrado")
     return product
 
+
 @router.get(
     "/",
     response_model=List[ProductListRead],
     summary="listar todos los productos"
     )
 def list_products(
-    search:Optional[str]=Query(None, description="Buscar por nombre"),
-    category:Optional[str]=Query(None, description="Filtrar por categorya"),
+    # search:Optional[str]=Query(None, description="Buscar por nombre"),
+    # category:Optional[str]=Query(None, description="Filtrar por categorya"),
     service:ProductService=Depends(get_product_service)
 ):
-    return service.list_products(search, category)
+    # data= service.list_products(search, category)
+    # print("PRoducto devuelto")
+    return service.repository.get_all()
 
 @router.put(
     "/{product_id}",
@@ -79,22 +100,22 @@ def delete_product(
         raise HTTPException(status_code=404, detail="Producto no encontrad")
     return {"ok": True, "message":"Producto eliminado con exito"}
 
-@router.patch(
-    "/{product_id}/stock",
-    response_model=ProductRead,
-    summary="Actualizar stock"
-)
-def change_stock(
-    product_id:int,
-    delta:StockChange,
-    service:ProductService=Depends(get_product_service),
-    admin=Depends(get_current_admin)
-):
-    try:
+# @router.patch(
+#     "/{product_id}/stock",
+#     response_model=ProductRead,
+#     summary="Actualizar stock"
+# )
+# def change_stock(
+#     product_id:int,
+#     delta:StockChange,
+#     service:ProductService=Depends(get_product_service),
+#     admin=Depends(get_current_admin)
+# ):
+#     try:
         
-        return service.change_stock(product_id, delta.delta)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+#         return service.change_stock(product_id, delta.delta)
+#     except ValueError as e:
+#         raise HTTPException(status_code=400, detail=str(e))
     
     
 # @router.post("/{product_id}/images")

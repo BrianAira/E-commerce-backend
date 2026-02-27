@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
+from app.domain.models.cart import CartCreate
 from app.domain.models.enum import UserRol
-from app.infrastructure.databases.database import get_session
+from app.core.database import get_session
 from app.domain.models.user import LoginData, User, UserCreate, UserRead
 from app.core.security import get_password_hash, verify_password, create_access_token
 from app.domain.models.token import Token
+from app.infrastructure.repositories.cart import CartRepository
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/register", response_model=Token)
@@ -26,6 +28,11 @@ def register(user_in: UserCreate, session: Session = Depends(get_session)):
     session.commit()
     session.refresh(user)
     
+    cart_repo = CartRepository(session)
+    cart_repo.create(CartCreate(user_id=user.id))
+    print(f"✅ Carrito creado automáticamente para usuario {user.id}")
+
+      
     access_token=create_access_token(subject=user.id)
     return {
         "user":user,

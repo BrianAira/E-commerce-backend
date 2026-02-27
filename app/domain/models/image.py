@@ -31,3 +31,21 @@ class ProductImageUpdate(SQLModel):
     is_main:Optional[bool]=None
     alt_text:Optional[str]=None
     Product_id:Optional[int]=None
+    
+    
+    
+# from sqlalchemy.orm import relationship
+# from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+# from app.core.database import Base
+
+
+# class Image(Base):
+#     __tablename__="images"
+    
+#     id=Column(Integer, primary_key=True, index=True)
+#     product_id=Column(Integer, ForeignKey("products.id"), nullable=False)
+#     url=Column(String(500), nullable=False)
+#     is_main=Column(Boolean, default=False)
+#     position=Column(Integer, nullable=True)
+    
+#     product=relationship("Product", back_populates="images")

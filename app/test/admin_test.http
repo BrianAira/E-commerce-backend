@@ -14,8 +14,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0I
 ###
 
 GET http://127.0.0.1:8000/admin/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMDkwMjQ4LCJleHAiOjE3NjExMDQ2NDh9.5Nv54uTpr0NI2kplOH2zbKViBkxD1xIsEWnOD7jzCUU
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMTcyMjk5LCJleHAiOjE3NjExODY2OTl9.iZaVTx0SdkRNZvP8PLYJU-ux6VuaIX31ZgYd_W7-9mE
 # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzYwOTMwNDAyLCJleHAiOjE3NjA5MzIyMDJ9.hoIRHcs3TlXm5Fih81JLubSmiQyUhw_5jL6ZKfo1M6w
 
 # {

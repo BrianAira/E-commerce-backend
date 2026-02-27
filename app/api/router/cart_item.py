@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from sqlmodel import Session
 
-from app.infrastructure.databases.database import get_session
+from app.core.database import get_session
 from app.domain.models.cart import CartCreate, CartRead, CartUpdate
 from app.domain.models.cart_item import CartItemRead, CartItemCreate, CartItemUpdate
 from app.infrastructure.repositories.cart import CartRepository

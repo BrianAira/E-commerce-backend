@@ -1,70 +1,40 @@
-# app/domain/models/product.py
-from typing import Optional, List
-from sqlmodel import SQLModel, Field, Relationship
-from decimal import Decimal
 
-from app.domain.models.product_image import ProductImageRead
-from app.domain.models.product_variants import ProductVariantRead
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, CheckConstraint, Enum as SQLAlchemyEnum
+from datetime import datetime
+import enum
+from app.core.database import Base
 
-class ProductBase(SQLModel):
-    name: str
-    description: Optional[str] = None
+# class StockStatus(str, Enum):
+#     NORMAL = "normal"
+#     LOW = "low_stock"
+#     OUT = "out_of_stock"
     
-    # sale_price:Decimal
-    category:str=Field(min_length=2, max_length=100)
-    gender:Optional[str]=Field(default=None, description="hombre, mujer, etc...")
-    # image:str
-    entry_price: Decimal
-    min_wholesale_quantity:int=Field(default=6, description="Cantidad minima para aplicar precio mayorista")
+class Gender(str, enum.Enum):
+    MAN= "hombre"
+    WOMAN="mujer"
+    CHILD="niño"
+    UNISEX="unisex"
+    ALL="todos"
+
+class Product(Base):
+    __tablename__="products"
     
-    wholesale_price:Decimal=Field(gt=0, description="Precio mayorista")
-    retail_price:Decimal=Field(gt=0, description="Precio minorista")
-    stock: int=Field(default=1)
+    id= Column(Integer, index=True, primary_key=True)
+    name=Column(String(255), nullable=False, index=True)
+    description= Column(String(500))
+    gender=Column(SQLAlchemyEnum(Gender),default=Gender.UNISEX, nullable=False)
+    category_id= Column(Integer, ForeignKey("categories.id"))
+    price=Column(Float(10,2))
+    # SKU Base (ej: "REM-OVERS-001")
     
-    is_active:bool=Field(default=True)
+    sku_base= Column(String(50), index=True, nullable=False, unique=True)    
+    created_at=Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at=Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow,nullable=False)
 
-class Product(ProductBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-
-    images:List["ProductImage"]=Relationship(back_populates="product")
-    variants:List["ProductVariant"]=Relationship(back_populates="product")
-
-    # Relación 1 a muchos con Cart: cada producto pertenece a un carrito
+    category=relationship("Category", back_populates="product")
     
-    cart_id: Optional[int] = Field(default=None, foreign_key="cart.id")
-    # cart: Optional["Cart"] = Relationship(back_populates="product")
-
-
-class ProductCreate(ProductBase):
-    pass
-    # cart_id: Optional[int] = None  # al crear un producto, puede asignarse a un carrito
-
-class ProductRead(ProductBase):
-    id: int
-    images:Optional[List[ProductImageRead]]=[]
-    variants:Optional[List[ProductVariantRead]]=[]
+    images=relationship("Images", back_populates="product", cascade="all, delete-orphan")
+    variants=relationship("Variants", back_populates="product", cascade="all, delete-orphan")
     
-    model_config={"from_attributes":True}
     
-    # cart_id: Optional[int] = None
-    
-class ProductListRead(ProductBase):
-    id:int
-    main_image:Optional[str]=None
-  
-class ProductUpdate(SQLModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    # image:Optional[List[str]]=None
-    entry_price: Optional[Decimal] = None
-    # sale_price:Optional[Decimal]=None
-    is_active:Optional[bool]=None
-    # stock: Optional[int] = None
-    category:Optional[str]=None
-    wholesale_price:Optional[Decimal]=None
-    retail_price:Optional[Decimal]=None
-    gender:Optional[str]=None 
-    # cart_id: Optional[int] = None
-
-# class ProductRead(ProductBase):
-#     id: int

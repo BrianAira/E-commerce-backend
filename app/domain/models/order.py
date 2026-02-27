@@ -1,44 +1,59 @@
-from sqlmodel import SQLModel, Field, Relationship
+from datetime import datetime
+import enum
 from typing import List, Optional
-from decimal import Decimal
-from datetime import datetime, timezone
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Float, Numeric, String
+# from sqlmodel import Field, Relationship, SQLModel
 
-from app.domain.models.enum import OrderStatus
-from app.domain.models.user import UserRead
-from app.domain.models.order_item import OrderItemRead
+from app.core.database import Base
 
-class OrderBase(SQLModel):
-    status:OrderStatus=Field(default=OrderStatus.PENDING)
-    total_amount:Decimal=Field(ge=0)
-    shipping_address:str
-    payment_method:str
+
+class OrderStatus(str, enum.Enum):
+    PENDING= "pending"
+    PAID="paid"
+    SHIPPED="shipped"
+    DELIVERED="delivered"
+    # CONFIRMED = "confirmed"
+    CANCELLED = "cancelled"
+
+
+class Order(Base):
+    __tablename__="orders"
     
-class Order(OrderBase, table=True):
-    id:int=Field(default=None, primary_key=True, unique=True)
-    created_at:datetime=Field(default_factory=lambda:datetime.now(timezone.utc))
-
-    client_id:int=Field(foreign_key="user.id")
+    id= Column(Integer,index=True, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
     
-    # client:"User"=Relationship(back_populates="orders")
-
-    items:List["OrderItem"]=Relationship(back_populates="order")
+    status: OrderStatus = Column(default=OrderStatus.PENDING, nullable=False)
+    order_date= Column(DateTime,default=datetime.utcnow, nullable=False)
+    # total_amount=Column(Float, nullable=False)
+    total_amount=Column(Numeric(10,2), nullable=False)
     
-class OrderCreate(OrderBase):
-    client_id:int
-
-    pass
-
-class OrderRead(OrderBase):
-    id:int
-    client_id:int
+    shipping_address_snapshot=Column(String(500), nullable=False)
+    tracking_number=Column(String(100), nullable=True)
+    # locality=Column(String(50), default="")
     
-    client:Optional[UserRead]=None
-    items:Optional[List[OrderItemRead]]=None
-    pass
-
-class OrderUpdate(SQLModel):
-    status:Optional[str]=None
-    total_amount:Optional[Decimal]=None
-    payment_method:Optional[str]=None
-    # shipping_address:Optional[str]=None
+    user= relationship("User", back_populates="orders")
+    items=relationship(
+        "OrderItem",
+        back_populates="order",
+        cascade="all, delete-orphan"
+    )
+    def __repr__(self):
+        return f"<Order {self.id} - Status: {self.status} - Total: {self.total_amount}>"
     
+    
+    #Definir relacion de uno a muchos, carga toda la lista de items al llamar order
+    # items: List["OrderItem"]=Relationship(back_populates="order")
+    
+    
+
+# class OrderItem(SQLModel, table=True):
+#     id: Optional[int] = Field(default=None, primary_key=True)
+#     order_id: int = Field(sa_column=Column(Integer, ForeignKey("order.id", ondelete="CASCADE")))
+#     #Relacion inversa uno a muchos
+#     # order: "Order"=Relationship(back_populates="items")
+#     product_id: int
+#     name: str
+#     quantity: int
+#     unit_price: float
+#     line_total: float

@@ -16,7 +16,8 @@ GET http://127.0.0.1:8000/product-variants/product/2
 ###
 PATCH http://127.0.0.1:8000/product-variants/2/change-stock
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMTU0ODIzLCJleHAiOjE3NjExNjkyMjN9.NbftWG4epGhERWgCj-w9Xsmsou5Mduyym1b3jNFfgMw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzYxMTcyMjk5LCJleHAiOjE3NjExODY2OTl9.iZaVTx0SdkRNZvP8PLYJU-ux6VuaIX31ZgYd_W7-9mE
+
 
 {
   "delta": 1

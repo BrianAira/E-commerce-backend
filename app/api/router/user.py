@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 
 from sqlmodel import Session
-from  app.infrastructure.databases.database import get_session
+from  app.core.database import get_session
 
 from app.domain.models.user import UserCreate, UserRead, AdminUpdate
-from app.infrastructure.security.dependencies import get_current_user
+from app.infrastructure.security.auth_utils import get_current_user
 from app.infrastructure.repositories.user import UserRepository
 from app.domain.services.user import UserService
 

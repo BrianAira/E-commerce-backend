@@ -1,7 +1,7 @@
 # app/application/ports/product_image_port.py
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from app.domain.models.product_image import ProductImage, ProductImageCreate
+from app.domain.models.image import ProductImage, ProductImageCreate
 
 class IProductImageRepository(ABC):
     @abstractmethod
@@ -18,4 +18,12 @@ class IProductImageRepository(ABC):
 
     @abstractmethod
     def delete(self, image_id: int) -> bool:
+        raise NotImplementedError
+    
+    @abstractmethod
+    def find_by_url(self, url: str, product_id: int) -> Optional[ProductImage]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_main_image(self, product_id: int, image_id: int) -> bool:
         raise NotImplementedError

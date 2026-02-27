@@ -1,42 +1,50 @@
-from typing import Optional ,List 
-from sqlmodel import SQLModel, Field, Relationship
-from pydantic import EmailStr, BaseModel, field_validator
-from app.domain.models.enum import UserRol
+from sqlalchemy import Boolean, Column, Integer, String, Enum
+import enum
+from sqlalchemy.orm import relationship
 
-class UserBase (SQLModel):
-    first_name: str= Field (index=True)
-    last_name:str=Field(min_length=2, max_length=20)
-    email: EmailStr = Field(unique= True , index=True)
-    phone: Optional[str] = Field (index=True, min_length=8, max_length=10)
-    address:str=Field(max_length=100, min_length=2, index=True)
+from app.core.database import Base
 
-class User(UserBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    hashedPassword: str
-    role:Optional[UserRol]=UserRol.CUSTOMER
-    # Relación inversa al carrito (1 a 1)
-    cart: Optional["Cart"] = Relationship(back_populates="user")
+class UserRole(str, enum.Enum):
+    ADMIN = "admin"
+    CLIENT = "client"
 
+class User(Base):
+    __tablename__="users"
+    
+    id= Column(Integer,index=True, primary_key=True) 
+    username= Column(String(100),index=True, nullable=True)
+    email = Column(String(150),nullable=False, unique=True, index=True)
+    password_hash= Column(String(255),nullable=False)
+    
+    role = Column(String(50), default=UserRole.CLIENT.value)
+    
+    is_active=Column(Boolean, default=True)
+    
+    directions=relationship("Direction", back_populates="user", cascade="all, delete-orphan")
+    cart=relationship("Cart", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    orders=relationship("Order", back_populates="user")
 
+     
+#     app/
+# ├── domain/                # Nivel 0: Reglas de Oro
+# │   ├── entities/          # Objetos de negocio (Ej: Product, Order)
+# │   ├── exceptions/        # Errores específicos (Ej: InsufficientStock)
+# │   └── ports/             # Interfaces (Contratos abstractos)
+# │
+# ├── application/           # Nivel 1: Coordinador (Casos de Uso)
+# │   ├── use_cases/         # Lógica de flujo (Ej: ProcessCheckout.py)
+# │   └── services/          # Lógica que cruza varias entidades
+# │
+# ├── infrastructure/        # Nivel 2: Implementación (Bajo nivel)
+# │   ├── persistence/       # SQLAlchemy, Redis, etc.
+# │   ├── external_apis/     # Clientes de Stripe, servicios de mail.
+# │   └── framework/         # Configuración de FastAPI, logs, etc.
+# │
+# ├── entrypoints/           # Nivel 3: El "Disparador" (Adaptadores de entrada)
+# │   ├── api/               # Tus rutas de FastAPI (Routers)
+# │   └── cli/               # Scripts de consola (si los tienes)
+# │
+# └── main.py                # El Pegamento (Inyección de dependencias)
 
-class UserCreate(UserBase):
-    password:str
-    # role:UserRol
-    @field_validator("role", check_fields=False)
-    def prevent_role_field(cls, v):
-        raise ValueError("El rol no puede asignarse manualmente")
-class UserRead(UserBase):
-    id:int
-    pass
-
-class AdminUpdate (SQLModel):
-    first_name: Optional[str]=None
-    last_name:Optional[str]=None
-    address:Optional[str]=None
-    email: Optional[EmailStr]=None
-    phone: Optional[str]= None
-    password: Optional[str]=None
-
-class LoginData(BaseModel):
-    email: EmailStr
-    password: str
+    
+    

@@ -2,14 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from sqlmodel import Session
 
-from app.infrastructure.databases.database import get_session
+from app.domain.models.user import User
+from app.core.database import get_session
 from app.domain.models.cart import CartCreate, CartRead, CartUpdate
 from app.domain.models.cart_item import CartItemRead, CartItemCreate, CartItemUpdate
 from app.infrastructure.repositories.cart import CartRepository
+from app.infrastructure.repositories.variant_repository import ProductVariantRepository
 from app.infrastructure.repositories.user import UserRepository
 from app.infrastructure.repositories.cart_item import CartItemRepository
 from app.infrastructure.repositories.product import ProductRepository
 from app.domain.services.cart import CartService
+from app.infrastructure.security.auth_utils import get_current_user
 
 
 router = APIRouter(prefix="/carts", tags=["carts"])
@@ -20,7 +23,31 @@ def get_cart_service(session: Session = Depends(get_session)):
     user_repo = UserRepository(session)
     cart_item_repo=CartItemRepository(session)
     product_repo=ProductRepository(session)
-    return CartService(cart_repo, user_repo, session, cart_item_repo, product_repo)
+    variant_repo=ProductVariantRepository(session)
+    return CartService(cart_repo, user_repo,variant_repo, session, cart_item_repo, product_repo)
+
+@router.get("/me", response_model=CartRead)
+def get_my_cart(
+    service: CartService = Depends(get_cart_service),
+    current_user: User = Depends(get_current_user)
+):
+    print("Usuario autenticado:", current_user.id)
+    cart = service.get_cart_by_user(current_user.id)
+    if not cart:
+        raise HTTPException(status_code=404, detail="Carrito no encontrado")
+    return cart
+
+@router.post("/me/items", response_model=CartItemRead)
+def add_item_to_my_cart(
+    item_data: CartItemCreate,
+    service: CartService = Depends(get_cart_service),
+    current_user: User = Depends(get_current_user)
+):
+    cart = service.get_cart_by_user(current_user.id)
+    if not cart:
+        raise HTTPException(status_code=404, detail="Carrito no encontrado")
+    return service.add_item(cart.id, item_data)
+
 
 #Crear carrito 
 @router.post("/", response_model=CartRead, status_code=status.HTTP_201_CREATED)

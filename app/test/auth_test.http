@@ -3,20 +3,20 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-    "first_name":"Brian",
+    "first_name":"Gabriel",
     "last_name":"Aira",
-    "email":"brianaira622@gmail.com",
+    "email":"brianaira@gmail.com",
     "phone":"2622698336",
     "address":"Calle falsa 123",
     "password":"123456"
 
 }
-###
+###eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzYxMTc2NTU1LCJleHAiOjE3NjExOTA5NTV9.ry_GNvk-9KXRDS29RWm4dvPM10yFNR_G1-OKosstLpM
 POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-    "email":"brianaira622@gmail.com",   
+    "email":"gabrfieedl622@gmail.com",   
     "password":"123456"
     
 }

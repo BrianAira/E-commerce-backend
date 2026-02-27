@@ -3,11 +3,11 @@ from typing import List
 from sqlmodel import Session
 
 from app.domain.models.stockChange import StockChange
-from app.infrastructure.databases.database import get_session
-from app.infrastructure.repositories.product_variant import ProductVariantRepository
+from app.core.database import get_session
+from app.infrastructure.repositories.variant_repository import ProductVariantRepository
 from app.domain.services.product_variant import ProductVariantService
-from app.domain.models.product_variants import ProductVariantCreate, ProductVariantRead, ProductVariantUpdate
-from app.infrastructure.security.dependencies import get_current_admin
+from app.domain.models.variant import ProductVariantCreate, ProductVariantRead, ProductVariantUpdate
+from app.infrastructure.security.auth_utils import get_current_admin
 
 router = APIRouter(prefix="/product-variants", tags=["Product Variants"])
  

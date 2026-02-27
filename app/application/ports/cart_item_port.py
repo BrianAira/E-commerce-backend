@@ -23,3 +23,7 @@ class ICartItemRepository(ABC):
     def delete(self, item_id:int)->bool:
         raise NotImplementedError
     
+    @abstractmethod
+    def find_by_variant(self, cart_id: int, product_variant_id: int) -> Optional[CartItem]:
+        raise NotImplementedError
+    

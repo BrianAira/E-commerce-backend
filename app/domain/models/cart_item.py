@@ -1,40 +1,28 @@
-from sqlmodel import Field, Relationship, SQLModel
-from typing import Optional, List
-from decimal import Decimal
 
-class CartItemBase(SQLModel):
-    quantity:int=Field(default=1, ge=1, description="Cantidad de productos en el carrito")
+
+from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, PrimaryKeyConstraint, UniqueConstraint
+from app.core.database import Base
+from sqlalchemy.orm import relationship
+
+
+class CartItem(Base):
+    __tablename__="cart_items"
     
+    id=Column(Integer, index=True, unique=True, primary_key=True)
+    cart_id=Column(Integer, ForeignKey("carts.id"), nullable=False)
+    variant_id=Column(Integer, ForeignKey("variants.id"), nullable=False)
     
-class CartItem(CartItemBase, table=True):
-    id:Optional[int]=Field(default=None, primary_key=True)
-    subtotal:Optional[Decimal]=Field(default=0)
+    quantity=Column(Integer, nullable=False, default=1)
     
-    cart_id:int=Field(foreign_key="cart.id")
-    cart:Optional["Cart"]=Relationship(back_populates="items")
-    
-    product_variant_id:Optional[int]=Field(foreign_key="productvariant.id")
-    
-    variant:Optional["ProductVariant"]=Relationship()
-    # product_id:int=Field(foreign_key="product.id")
-    # product:Optional["Product"]=Relationship(back_populates="cart_items")#Relacion inversa hacia producto
-    
-    
-    
-class CartItemCreate(CartItemBase):
-    # cart_id:int
-    product_id:int
-    product_variant_id:int
-    # subtotal:Decimal
-    
-class CartItemRead(CartItemBase):
-    id:int
-    cart_id:int
-    product_variant_id:int
-    # product_id:int
-    subtotal:Decimal
-    
-class CartItemUpdate(SQLModel):
-    subtotal:Optional[Decimal]=None
-    quantity:Optional[int]=None
-     
+    # __table_args__=(
+    #     PrimaryKeyConstraint("cart_id", "variant_id"),
+        
+    # )
+    __table_args__ = (
+        # Asegura que no se repita la misma variante en el mismo carrito
+        UniqueConstraint('cart_id', 'variant_id', name='unique_cart_variant'),
+        # Cantidad mínima de 1
+        CheckConstraint('quantity > 0', name='check_quantity_positive'),
+    )
+    cart= relationship("Cart", back_populates="items")
+    variant=relationship("Variant")
