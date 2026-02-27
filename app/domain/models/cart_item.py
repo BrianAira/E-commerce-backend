@@ -25,4 +25,4 @@ class CartItem(Base):
         CheckConstraint('quantity > 0', name='check_quantity_positive'),
     )
     cart= relationship("Cart", back_populates="items")
-    variant=relationship("Variant")
+    variant=relationship("VariantProduct")
