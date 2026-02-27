@@ -1,6 +1,6 @@
 
 from typing import List, Optional
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 from app.domain.schemas.image import ImageResponse
 from app.domain.schemas.variant import VariantResponse
