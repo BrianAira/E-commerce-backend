@@ -56,3 +56,25 @@ class SQLVariantRepository(IVariantRepository):
         self.db.commit()
         self.db.refresh(variant)
         return variant                                                 
+
+    def list_by_product(self, product_id:int)->List[VariantProduct]:
+        return self.db.query(VariantProduct).filter(VariantProduct.product_id== product_id).all()
+    
+    def update_stock(self, variant_id:int, quantity_to_add:int)->VariantProduct:
+        variant=self.get_by_id(variant_id)
+        if not variant:
+            raise ValueError("Variante no encontrada")
+        variant.stock_current+=quantity_to_add
+        
+        if variant.stock_current<0:
+            variant.stock_current=0
+            
+        self.db.commit()
+        self.db.refresh(variant)
+        return variant
+    
+    def list_low_stock(self, threshold:int)->List[VariantProduct]:
+        return self.db.query(VariantProduct).filter(VariantProduct.stock_current<=threshold).all()
+    
+    def get_all_variants_with_products(self)->List[VariantProduct]:
+        return self.db.query(VariantProduct).all()
