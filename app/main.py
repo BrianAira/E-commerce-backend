@@ -3,11 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import Base, engine
 from app.core.config import settings
-from app.entrypoints.api.order_router import router as order_router
-from app.entrypoints.api.cart_router import router as cart_router
-from app.entrypoints.api.user_router import router as user_router
-from app.entrypoints.api.product_router import router as product_router
-
+from app.api.router.order_router import router as order_router
+from app.api.router.cart_router import router as cart_router
+from app.api.router.user_router import router as user_router
+from app.api.router.product_router import router as product_router
+from app.api.router.category_router import router as category_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -36,6 +36,8 @@ app.include_router(product_router)
 app.include_router(user_router)
 app.include_router(cart_router)
 app.include_router(order_router)
+app.include_router(category_router)
+
 # app.include_router(dashboard_router)
 
 @app.get("/")
