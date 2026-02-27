@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 
 from app.domain.models.order import Order, OrderStatus
+from app.domain.schemas.order import OrderFilters
 
 
 class IOrderRepository(ABC):
@@ -31,5 +32,5 @@ class IOrderRepository(ABC):
         pass
     
     @abstractmethod
-    def get_all_orders(self)->List[Order]:
+    def get_all_orders(self, filters:OrderFilters)->List[Order]:
         pass
