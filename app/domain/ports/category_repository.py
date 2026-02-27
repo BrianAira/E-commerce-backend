@@ -11,9 +11,9 @@ class ICategoryRepository(ABC):
     def get_by_id(self, category_id:int)->Category:
         pass    
     
-    @abstractmethod
-    def get_by_slug(self, slug:str)->Optional[Category]:
-        pass
+    # @abstractmethod
+    # def get_by_slug(self, slug:str)->Optional[Category]:
+    #     pass
     
     @abstractmethod
     def list_all(self)->List[Category]:
@@ -27,4 +27,6 @@ class ICategoryRepository(ABC):
     def update(self, data:CategoryUpdate)->Category:
         pass
     
-    
+    @abstractmethod
+    def delete(self,category_id:int)->bool:
+        pass
