@@ -51,3 +51,7 @@ class IVariantRepository(ABC):
         pass
     
     
+    @abstractmethod
+    def get_all_variants_with_products(self)->List[VariantProduct]:
+        return self.db.query(VariantProduct).all()
+    
