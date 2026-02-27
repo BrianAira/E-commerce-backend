@@ -11,7 +11,7 @@ from app.core.database import get_db
 from app.domain.models.user import User
 # from app.repositories.user_repository import SQLUserRepository
 from app.domain.schemas.user import TokenData
-from app.infrastructure.persistence.user_repository import SQLUserRepository
+from app.infrastructure.repositories.user import SQLUserRepository
 
 pwd_context = CryptContext(
     schemes=["pbkdf2_sha256"], 
@@ -27,7 +27,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 # Configuración de OAuth2
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login") 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login") 
 
 
 # Funciones de JWT
@@ -76,7 +76,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
 
     user_repo = SQLUserRepository(db)
-    user = user_repo.get_user_by_id(int(token_data.id)) 
+    user = user_repo.get_by_id(int(token_data.id)) 
+    
     
     if user is None:
         raise credentials_exception
