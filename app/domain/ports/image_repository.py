@@ -9,4 +9,4 @@ class IImageRepository(ABC):
     @abstractmethod
     def delete_file(self, file_url:str)->bool:
         pass
-    
+     
