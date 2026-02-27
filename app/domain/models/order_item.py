@@ -14,7 +14,7 @@ class OrderItem(Base):
     
     unit_price=Column(Numeric(10, 2), nullable=False)
     order=relationship("Order", back_populates="items")
-    variant=relationship("Variant")
+    variant=relationship("VariantProduct")
     
     @property
     def subtotal(self) -> float:
