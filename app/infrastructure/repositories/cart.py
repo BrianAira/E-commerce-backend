@@ -1,13 +1,22 @@
 from typing import Optional
 from sqlmodel import Session
+from sqlalchemy.orm import joinedload
 from app.domain.models.cart import Cart
 from app.domain.models.cart_item import CartItem
+from app.domain.models.variant import VariantProduct
 from app.domain.ports.cart_repository import ICartRepository
 
 
 class SQLCartRepository(ICartRepository):
     def __init__(self, db:Session):
         self.db=db
+        
+    def get_by_id(self, cart_id:int)->Optional[Cart]:
+        return self.db.query(Cart).options(
+            joinedload(Cart.items)
+            .joinedload(CartItem.variant)
+            .joinedload(VariantProduct.product)
+        ).filter(Cart.id==cart_id).first
         
     def get_by_user_id(self, user_id:int)->Optional[Cart]:
         return self.db.query(Cart).filter(Cart.user_id==user_id).first()
@@ -61,3 +70,11 @@ class SQLCartRepository(ICartRepository):
         
     def get_by_id(self, cart_id:int)->Optional[Cart]:
         return self.db.query(Cart).filter(Cart.id==cart_id).first()
+    
+    def update_cart_total(self, cart_id:int, new_total:float)->Cart:
+        cart=self.get_by_id(cart_id)
+        if cart:
+            cart.total_price=new_total
+            self.db.commit()
+            self.db.refresh(cart)
+        return cart
