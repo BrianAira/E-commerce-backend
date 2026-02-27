@@ -1,6 +1,6 @@
 
 
-from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy import Column, Float, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -21,11 +21,19 @@ class Cart(Base):
     user=relationship("User", back_populates="cart")
     items=relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")    
     # status: CartStatus = Field(default=CartStatus.OPEN)
+    total_price=Column(Float, default=0.0)
 
     @property
     def total_items(self) -> int:
         """Suma rápida de todas las cantidades en el carrito."""
         return sum(item.quantity for item in self.items)
+
+    user=relationship("User", back_populates="cart")
+    items=relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
+
+    # @property
+    # def total_price(self)->float:
+    #     return sum(item.quantity*item.product.price for item in self.items)
 
 # class CartItem(SQLModel, table=True):
 #     id: Optional[int] = Field(default=None, primary_key=True)
