@@ -20,7 +20,7 @@ class User(Base):
     
     is_active=Column(Boolean, default=True)
     
-    directions=relationship("Direction", back_populates="user", cascade="all, delete-orphan")
+    directions=relationship("Directions", back_populates="user", cascade="all, delete-orphan")
     cart=relationship("Cart", back_populates="user", uselist=False, cascade="all, delete-orphan")
     orders=relationship("Order", back_populates="user")
 
