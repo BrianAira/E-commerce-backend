@@ -1,14 +1,14 @@
 from datetime import datetime
-import enum
-from typing import List, Optional
+from enum import Enum
+# from typing import List, Optional
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, Float, Numeric, String
-# from sqlmodel import Field, Relationship, SQLModel
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Float, Numeric, String, Enum as SQLAlchemyEnum
+from sqlmodel import Enum as SQLAdminEnum
 
 from app.core.database import Base
 
 
-class OrderStatus(str, enum.Enum):
+class OrderStatus(str, Enum):
     PENDING= "pending"
     PAID="paid"
     SHIPPED="shipped"
@@ -22,8 +22,11 @@ class Order(Base):
     
     id= Column(Integer,index=True, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
-    
-    status: OrderStatus = Column(default=OrderStatus.PENDING, nullable=False)
+    status = Column(
+        SQLAlchemyEnum(OrderStatus), 
+        default=OrderStatus.PENDING, 
+        nullable=False)
+    # status: OrderStatus = Column(default=OrderStatus.PENDING, nullable=False)
     order_date= Column(DateTime,default=datetime.utcnow, nullable=False)
     # total_amount=Column(Float, nullable=False)
     total_amount=Column(Numeric(10,2), nullable=False)
