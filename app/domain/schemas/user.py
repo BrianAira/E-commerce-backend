@@ -46,15 +46,24 @@ class UserLogin(BaseModel):
     email:EmailStr
     password:str
     
+class UserRegisterResponse(BaseModel):
+    user:UserRead
+    access_token:str
+    token_type:str
+    
 class Token(BaseModel):
     #Esquema de salida para el token jwt
     access_token:str
     token_type:str="bearer"
+    # username:Optional[str]=None
+    # id:Optional[int]=None
+    # role:Optional[str]=None
+    # email:Optional[str]=None
     
-    username:str=Field(..., description="El nombre del usuario autenticado")
-    id:int=Field(..., description="El id del usuario autenticado")
-    role:str=Field(..., description="el rol de usuario autenticado")
-    email:EmailStr=Field(..., description="El email del usuario autenticado")
+    # username:str=Field(..., description="El nombre del usuario autenticado")
+    # id:int=Field(..., description="El id del usuario autenticado")
+    # role:str=Field(..., description="el rol de usuario autenticado")
+    # email:EmailStr=Field(..., description="El email del usuario autenticado")
     
 class TokenData(SQLModel):
     id:Optional[int]=None
