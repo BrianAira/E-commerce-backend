@@ -32,9 +32,9 @@ class Product(Base):
     created_at=Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at=Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow,nullable=False)
 
-    category=relationship("Category", back_populates="product")
+    category=relationship("Category", back_populates="products")
     
-    images=relationship("Images", back_populates="product", cascade="all, delete-orphan")
-    variants=relationship("Variants", back_populates="product", cascade="all, delete-orphan")
-    
+    images=relationship("Image", back_populates="product", cascade="all, delete-orphan")
+    variants=relationship("VariantProduct", back_populates="product", cascade="all, delete-orphan")
+     
     
