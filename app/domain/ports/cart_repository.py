@@ -31,4 +31,12 @@ class ICartRepository(ABC):
     def clear_cart(self, cart_id:int)->None:
         pass
     
+    @abstractmethod
+    def get_by_id(self, cart_id:int)->Optional[Cart]:
+        pass
+    
+    @abstractmethod
+    def update_cart_total(cart_id:int, new_total:float)->Cart:
+        pass
+    
     
