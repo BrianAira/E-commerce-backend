@@ -55,7 +55,7 @@ class SQLOrderRepository(IOrderRepository):
             query=query.filter(Order.status==filters.status)
             
         if filters.location:
-            query=query.filters(Order.shipping_address_snapshot.ilike(f"%{filters.location}%"))
+            query=query.filter(Order.shipping_address_snapshot.ilike(f"%{filters.location}%"))
             
         if filters.postal_code:
             
