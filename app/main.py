@@ -8,7 +8,7 @@ from app.api.router.cart_router import router as cart_router
 from app.api.router.user_router import router as user_router
 from app.api.router.product_router import router as product_router
 from app.api.router.category_router import router as category_router
-
+from app.api.router.payment_router import router as payment_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -37,6 +37,8 @@ app.include_router(user_router)
 app.include_router(cart_router)
 app.include_router(order_router)
 app.include_router(category_router)
+app.include_router(payment_router)
+
 
 # app.include_router(dashboard_router)
 
