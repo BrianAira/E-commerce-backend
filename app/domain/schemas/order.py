@@ -46,3 +46,10 @@ class OrderFilters(BaseModel):
     postal_code:Optional[str]=None
     start_date:Optional[date]=None
     end_date:Optional[date]=None
+    
+class CheckoutResponse(BaseModel):
+    # order:OrderResponse
+    order_id:int
+    total_amount:float
+    status:str
+    payment_url:str
