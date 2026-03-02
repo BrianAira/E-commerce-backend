@@ -66,6 +66,10 @@ class SQLCartRepository(ICartRepository):
         
     def clear_cart(self, cart_id:int)->None:
         self.db.query(CartItem).filter(CartItem.cart_id==cart_id).delete()
+        cart=self.db.query(Cart).filter(Cart.id==cart_id).first()
+        if cart:
+            cart.total_amount=0
+        
         self.db.commit()
         
     def get_by_id(self, cart_id:int)->Optional[Cart]:
