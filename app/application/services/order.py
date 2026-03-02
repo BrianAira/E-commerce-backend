@@ -82,14 +82,10 @@ class OrderService:
         for item in cart.items:
             self.variant_repo.reduce_stock(item.variant_id, item.quantity)
         
+        #Genera link de pago usando la abstraccion
         payment_url=self.payment_repo.create_payment_preference(new_order)
                 
         self.cart_repo.clear_cart(cart.id)
-        
-        
-        
-        
-            
         return {
             "order":new_order,
             "payment_url":payment_url
