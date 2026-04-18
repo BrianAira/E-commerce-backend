@@ -2,6 +2,8 @@
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field
 
+# from app.domain.schemas.product import ProductMinOut
+
 
 class VariantBase(BaseModel):
     color:str=Field(..., min_length=3, max_length=50)

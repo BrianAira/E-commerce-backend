@@ -10,23 +10,35 @@ from app.domain.ports.cart_repository import ICartRepository
 class SQLCartRepository(ICartRepository):
     def __init__(self, db:Session):
         self.db=db
-        
-    def get_by_id(self, cart_id:int)->Optional[Cart]:
+    #Metodo privado para no repetir logica de joinedload
+    def _get_base_query(self):
         return self.db.query(Cart).options(
             joinedload(Cart.items)
             .joinedload(CartItem.variant)
             .joinedload(VariantProduct.product)
-        ).filter(Cart.id==cart_id).first
+        )
+        
+        
+    def get_by_id(self, cart_id:int)->Optional[Cart]:
+        return self._get_base_query().filter(Cart.id==cart_id).first()
+    
+    
+        # return self.db.query(Cart).options(
+        #     joinedload(Cart.items)
+        #     .joinedload(CartItem.variant)
+        #     .joinedload(VariantProduct.product)
+        # ).filter(Cart.id==cart_id).first
         
     def get_by_user_id(self, user_id:int)->Optional[Cart]:
-        return self.db.query(Cart).filter(Cart.user_id==user_id).first()
+        # return self.db.query(Cart).filter(Cart.user_id==user_id).first()
+        return self._get_base_query().filter(Cart.id==user_id).first()
     
     def create_cart(self, user_id:int)->Cart:
         new_cart=Cart(user_id=user_id)
         self.db.add(new_cart)
         self.db.commit()
         self.db.refresh(new_cart)
-        return new_cart
+        return self.get_by_id(new_cart.id)
     
     def add_or_update_item(self, cart_id:int, variant_id:int, quantity:int):
         item=self.db.query(CartItem).filter(
@@ -43,7 +55,7 @@ class SQLCartRepository(ICartRepository):
             
             
         self.db.commit()
-        return self.get_by_user_id(cart_id)
+        return self.get_by_id(cart_id)
     
     def update_item_quantity(self, cart_id:int, variant_id:int, quantity:int)->Cart:
         item=self.db.query(CartItem).filter(
@@ -68,12 +80,12 @@ class SQLCartRepository(ICartRepository):
         self.db.query(CartItem).filter(CartItem.cart_id==cart_id).delete()
         cart=self.db.query(Cart).filter(Cart.id==cart_id).first()
         if cart:
-            cart.total_amount=0
+            cart.total_price=0
         
         self.db.commit()
         
-    def get_by_id(self, cart_id:int)->Optional[Cart]:
-        return self.db.query(Cart).filter(Cart.id==cart_id).first()
+    # def get_by_id(self, cart_id:int)->Optional[Cart]:
+    #     return self.db.query(Cart).filter(Cart.id==cart_id).first()
     
     def update_cart_total(self, cart_id:int, new_total:float)->Cart:
         cart=self.get_by_id(cart_id)

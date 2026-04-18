@@ -10,7 +10,7 @@ engine=create_engine(
     pool_timeout=30,
     pool_recycle=60*30, 
     pool_pre_ping=True,
-    # echo=True
+  
     )
 
 SessionLocal=sessionmaker(
@@ -30,10 +30,3 @@ def get_db():
     finally:
         db.close()
 
-# def get_session():
-#     with Session(engine) as session:
-#         yield session
-        
-# def init_db():
-#     #Crear las tablas si aun no existen.
-#     SQLModel.metadata.create_all(engine)

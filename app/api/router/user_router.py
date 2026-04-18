@@ -14,7 +14,7 @@ from app.domain.schemas.user import UserCreate, UserRead, Token, UserRegisterRes
 
 
 router=APIRouter(prefix="/users", tags=["Users"])
-
+ 
 def get_user_service(db:Session=Depends(get_db))->UserService:
     return UserService(
         user_repo=SQLUserRepository(db),
@@ -28,7 +28,7 @@ def register(
 ):
     try:
         # return service.create_user_as_client(user_data)
-        user=service.create_user_as_client(user_data)
+        user=service.create_user_as_admin(user_data)
         access_token=create_access_token(data={"sub":str(user.id)})
         return {
             "user":user,

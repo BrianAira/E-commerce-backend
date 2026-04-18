@@ -43,5 +43,3 @@ class ProductFilterParams(BaseModel):
     order:Optional[str]="asc"
     
     
-    
-    

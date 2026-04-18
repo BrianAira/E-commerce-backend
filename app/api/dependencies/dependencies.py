@@ -28,13 +28,3 @@ def get_payment_service(db:Session=Depends(get_db)):
         order_repo=SQLOrderRepository(db),
         variant_repo=SQLVariantRepository(db)
     )
-# def get_order_service(
-#     db: Session = Depends(get_db),
-#     payment_repo: IPaymentRepository = Depends(get_payment_repo)
-# ) -> OrderService:
-#     # Pasamos el payment_repo al constructor del OrderService
-#     return OrderService(
-#         order_repo=SQLOrderRepository(db),
-#         payment_repo=payment_repo,
-#         ...,
-#     )
